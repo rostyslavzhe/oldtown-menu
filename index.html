@@ -1,0 +1,752 @@
+<!DOCTYPE html>
+<html lang="uk">
+<head>
+<meta charset="UTF-8">
+<title>Меню OldTown</title>
+<style>
+  @import url('https://fonts.googleapis.com/css2?family=Marcellus&family=Roboto&display=swap');
+
+  body {
+    font-family: 'Roboto', sans-serif;
+    background: linear-gradient(135deg, #f9f8f6 0%, #ded5c4 100%);
+    color: #4b3b2b;
+    margin: 0;
+    padding: 40px 20px;
+    min-height: 100vh;
+    overflow-y: scroll;
+  }
+
+  h1 {
+    font-family: 'Marcellus', serif;
+    text-align: center;
+    font-size: 3.5rem;
+    margin-bottom: 50px;
+    color: #5a4329;
+    text-shadow: 2px 2px 4px rgba(198, 166, 100, 0.7);
+  }
+
+  .controls {
+    max-width: 720px;
+    margin: 0 auto 50px;
+    display: flex;
+    gap: 15px;
+    flex-wrap: wrap;
+    justify-content: center;
+  }
+
+  input, select {
+    flex: 1 1 220px;
+    padding: 14px 20px;
+    font-size: 1.1rem;
+    border: 2.5px solid #bfa27a;
+    border-radius: 10px;
+    background: #faf6ef;
+    color: #5d4633;
+    box-shadow:
+      inset 3px 3px 6px #d1c1a7,
+      inset -3px -3px 6px #fff9e6;
+    transition: border-color 0.3s ease, box-shadow 0.3s ease;
+    cursor: pointer;
+  }
+  input:focus, select:focus {
+    outline: none;
+    border-color: #7d5e36;
+    box-shadow:
+      0 0 8px 2px #bfa27a,
+      inset 3px 3px 6px #d1c1a7,
+      inset -3px -3px 6px #fff9e6;
+    background: #fff8e1;
+  }
+
+  details {
+    background: #f3e9db;
+    border-radius: 12px;
+    margin-bottom: 18px;
+    box-shadow: 4px 4px 10px rgba(0,0,0,0.1);
+    overflow: hidden;
+    transition: box-shadow 0.3s ease;
+  }
+  details:hover {
+    box-shadow: 6px 6px 15px rgba(0,0,0,0.15);
+  }
+
+  summary {
+    font-family: 'Marcellus', serif;
+    font-size: 1.9rem;
+    color: #6b4c32;
+    padding: 18px 30px;
+    cursor: pointer;
+    user-select: none;
+    list-style: none;
+    position: relative;
+    transition: color 0.3s ease;
+  }
+  summary:hover {
+    color: #a67c39;
+  }
+  summary::-webkit-details-marker {
+    display: none;
+  }
+  summary::before {
+    content: "📜";
+    display: inline-block;
+    margin-right: 14px;
+    font-size: 1.6rem;
+    transition: transform 0.3s ease;
+  }
+  details[open] > summary::before {
+    content: "📖";
+    transform: rotate(15deg);
+  }
+
+  details.category {
+    background: #f9f4e9;
+    margin-left: 30px;
+    border-left: 4px solid #bfa67c;
+    box-shadow: inset 2px 2px 5px #e6d9c3;
+  }
+  details.category > summary {
+    font-size: 1.5rem;
+    color: #83613f;
+    padding: 12px 24px;
+  }
+  details.category:hover > summary {
+    color: #a88645;
+  }
+
+  .product-group {
+    margin-left: 55px;
+    margin-bottom: 14px;
+    border-left: 3px solid #d7c6a7;
+    padding-left: 18px;
+    transition: background-color 0.3s ease;
+    border-radius: 0 8px 8px 0;
+  }
+  .product-group:hover {
+    background-color: #f0e6d4;
+  }
+
+  .product {
+    font-family: 'Marcellus', serif;
+    font-size: 1.35rem;
+    font-weight: 700;
+    color: #6b4f35;
+    margin-bottom: 6px;
+  }
+
+  .mod {
+    margin-left: 22px;
+    font-style: italic;
+    color: #8a6f56;
+    font-size: 1rem;
+  }
+
+  /* Плавне розгортання деталей */
+  details[open] > summary {
+    color: #a67c39;
+  }
+
+  /* Легка текстура паперу */
+  body::before {
+    content: "";
+    position: fixed;
+    top: 0; left: 0; width: 100%; height: 100%;
+    pointer-events: none;
+    background-image: url('https://www.transparenttextures.com/patterns/linen.png');
+    opacity: 0.07;
+    z-index: -1;
+  }
+</style>
+
+
+</head>
+<body>
+
+<h1>Меню кафе OldTown</h1>
+
+<div class="controls">
+  <input id="search" placeholder="Пошук..." oninput="filterMenu()"/>
+  <select id="filterSection" onchange="filterMenu()">
+    <option value="">Всі секції</option>
+  </select>
+  <select id="sortOption" onchange="filterMenu()">
+    <option value="">Без сортування</option>
+    <option value="priceAsc">Ціна ↑</option>
+    <option value="priceDesc">Ціна ↓</option>
+    <option value="nameAsc">Назва ↑</option>
+    <option value="nameDesc">Назва ↓</option>
+  </select>
+</div>
+
+<div id="menu">
+<details><summary>Кухня</summary>
+  <details class="category"><summary>Перші страви</summary>
+    <div class="product-group">
+      <div class="product">Чихиртма з куркою — 180.00 грн</div>
+    </div>
+    <div class="product-group">
+      <div class="product">Харчо по-іметиринськи — 190.00 грн</div>
+    </div>
+    <div class="product-group">
+      <div class="product">Окрошка — 150.00 грн</div>
+    </div>
+  </details>
+  <details class="category"><summary>Закуски</summary>
+    <div class="product-group">
+      <div class="product">Асорті з солоних — 295.00 грн</div>
+    </div>
+    <div class="product-group">
+      <div class="product">Салат "Свіжий город" — 220.00 грн</div>
+    </div>
+    <div class="product-group">
+      <div class="product">Бастурма — 100.00 грн</div>
+    </div>
+    <div class="product-group">
+      <div class="product">Суджук — 100.00 грн</div>
+    </div>
+    <div class="product-group">
+      <div class="product">Плато "Асорті" — 350.00 грн</div>
+    </div>
+    <div class="product-group">
+      <div class="product">Сулугуні — 85.00 грн</div>
+    </div>
+    <div class="product-group">
+      <div class="product">Бринза — 70.00 грн</div>
+    </div>
+    <div class="product-group">
+      <div class="product">Маслини та оливки (без кісток) — 115.00 грн</div>
+    </div>
+  </details>
+  <details class="category"><summary>Соуси</summary>
+    <div class="product-group">
+      <div class="product">Аджика гостра — 40.00 грн</div>
+    </div>
+    <div class="product-group">
+      <div class="product">Наршараб соус — 50.00 грн</div>
+    </div>
+    <div class="product-group">
+      <div class="product">Мацоні соус — 40.00 грн</div>
+    </div>
+    <div class="product-group">
+      <div class="product">Сацебелі соус — 40.00 грн</div>
+    </div>
+  </details>
+  <details class="category"><summary>Випічка</summary>
+    <div class="product-group">
+      <div class="product">Хачапурі по-аджарськи — 210.00 грн</div>
+    </div>
+    <div class="product-group">
+      <div class="product">Хачапурі по-мегрельськи — 200.00 грн</div>
+    </div>
+    <div class="product-group">
+      <div class="product">Лаваш — 30.00 грн</div>
+    </div>
+    <div class="product-group">
+      <div class="product">Кекс — 30.00 грн</div>
+    </div>
+    <div class="product-group">
+      <div class="product">Круасан — 50.00 грн</div>
+    </div>
+  </details>
+  <details class="category"><summary>М'ясні страви</summary>
+    <div class="product-group">
+      <div class="product">Шашлик зі свинини — 210.00 грн</div>
+    </div>
+    <div class="product-group">
+      <div class="product">Шашлик із курятини — 200.00 грн</div>
+    </div>
+    <div class="product-group">
+      <div class="product">Стейк зі свинини "Чалагадж" — 210.00 грн</div>
+    </div>
+    <div class="product-group">
+      <div class="product">Люля кебаб зі свинини — 195.00 грн</div>
+    </div>
+  </details>
+  <details class="category"><summary>Гарніри</summary>
+    <div class="product-group">
+      <div class="product">Пюре — 80.00 грн</div>
+    </div>
+    <div class="product-group">
+      <div class="product">Картопля запечена — 90.00 грн</div>
+    </div>
+    <div class="product-group">
+      <div class="product">Рис відварний — 80.00 грн</div>
+    </div>
+  </details>
+  <details class="category"><summary>Салати</summary>
+    <div class="product-group">
+      <div class="product">Салат по-домашньому — 155.00 грн</div>
+    </div>
+    <div class="product-group">
+      <div class="product">Салат "Грецький" — 180.00 грн</div>
+    </div>
+    <div class="product-group">
+      <div class="product">Цезар — 230.00 грн</div>
+    </div>
+  </details>
+  <details class="category"><summary>Гарячі закуски</summary>
+    <div class="product-group">
+      <div class="product">Гриби з сиром сулугуні — 210.00 грн</div>
+    </div>
+    <div class="product-group">
+      <div class="product">Гриби з м'ясом яловичини та сиром — 250.00 грн</div>
+    </div>
+    <div class="product-group">
+      <div class="product">Долма — 230.00 грн</div>
+    </div>
+    <div class="product-group">
+      <div class="product">Хінкалі свино-яловичі — 220.00 грн</div>
+    </div>
+    <div class="product-group">
+      <div class="product">Хінкалі з бараниною — 220.00 грн</div>
+    </div>
+    <div class="product-group">
+      <div class="product">Хінкалі з куркою — 220.00 грн</div>
+    </div>
+    <div class="product-group">
+      <div class="product">Млинці зі сметаною та крем-сиром — 140.00 грн</div>
+    </div>
+    <div class="product-group">
+      <div class="product">Млинці зі свининою — 140.00 грн</div>
+    </div>
+    <div class="product-group">
+      <div class="product">Млинці солодкі з сиром — 140.00 грн</div>
+    </div>
+    <div class="product-group">
+      <div class="product">Оджахурі — 200.00 грн</div>
+    </div>
+    <div class="product-group">
+      <div class="product">Лобіо — 190.00 грн</div>
+    </div>
+  </details>
+  <details class="category"><summary>Закуски до пива</summary>
+    <div class="product-group">
+      <div class="product">Фісташки 50г — 70.00 грн</div>
+    </div>
+    <div class="product-group">
+      <div class="product">Горіхи солоні 50г — 35.00 грн</div>
+    </div>
+    <div class="product-group">
+      <div class="product">Ікряні палички 50г — 50.00 грн</div>
+    </div>
+    <div class="product-group">
+      <div class="product">Кальмар перуанський 50г — 70.00 грн</div>
+    </div>
+    <div class="product-group">
+      <div class="product">Плато рибне 300г — 500.00 грн</div>
+    </div>
+    <div class="product-group">
+      <div class="product">Плато м'ясне 300г — 400.00 грн</div>
+    </div>
+    <div class="product-group">
+      <div class="product">Плато сирне 300г — 400.00 грн</div>
+    </div>
+  </details>
+</details>
+<details><summary>Бар</summary>
+  <details class="category"><summary>Соки</summary>
+    <div class="product-group">
+      <div class="product">Сік 1л — 140.00 грн</div>
+    </div>
+    <div class="product-group">
+      <div class="product">Сік 0.33л — 50.00 грн</div>
+    </div>
+  </details>
+  <details class="category"><summary>Соки вірменські</summary>
+    <div class="product-group">
+      <div class="product">Ani 0.5л — 120.00 грн</div>
+    </div>
+    <div class="product-group">
+      <div class="product">Компот 0.33л — 40.00 грн</div>
+    </div>
+    <div class="product-group">
+      <div class="product">Компот 1л — 120.00 грн</div>
+    </div>
+  </details>
+  <details class="category"><summary>Холодні напої</summary>
+    <div class="product-group">
+      <div class="product">Лимонад — 120.00 грн</div>
+    </div>
+    <div class="product-group">
+      <div class="product">Мохіто — 90.00 грн</div>
+    </div>
+    <div class="product-group">
+      <div class="product">Бамбл — 80.00 грн</div>
+    </div>
+    <div class="product-group">
+      <div class="product">Еспресотонік — 80.00 грн</div>
+    </div>
+    <div class="product-group">
+      <div class="product">Джміль — 90.00 грн</div>
+    </div>
+    <div class="product-group">
+      <div class="product">Айс-лате — 80.00 грн</div>
+    </div>
+    <div class="product-group">
+      <div class="product">Молочний коктейль — 80.00 грн</div>
+    </div>
+  </details>
+  <details class="category"><summary>Вода мінеральна</summary>
+    <div class="product-group">
+      <div class="product">Джермук — 120.00 грн</div>
+    </div>
+    <div class="product-group">
+      <div class="product">Бон Аква — 50.00 грн</div>
+    </div>
+    <div class="product-group">
+      <div class="product">Моршинська — 70.00 грн</div>
+    </div>
+    <div class="product-group">
+      <div class="product">Sairme — 120.00 грн</div>
+    </div>
+  </details>
+  <details class="category"><summary>Горілка</summary>
+    <div class="product-group">
+      <div class="product">Фінляндія горілка 50мл — 50.00 грн</div>
+    </div>
+    <div class="product-group">
+      <div class="product">Горілка Абсолют 50мл — 70.00 грн</div>
+    </div>
+    <div class="product-group">
+      <div class="product">Горілка Абрикос</div>
+      <div class="mod">Горілка Абрикос 500мл — 650.00 грн</div>
+      <div class="mod">Горілка Абрикос 50мл — 65.00 грн</div>
+    </div>
+    <div class="product-group">
+      <div class="product">Горілкка Айсберг</div>
+      <div class="mod">Горілкка Айсберг 500мл — 550.00 грн</div>
+      <div class="mod">Горілкка Айсберг 50мл — 55.00 грн</div>
+    </div>
+    <div class="product-group">
+      <div class="product">Горілкка Озон</div>
+      <div class="mod">Горілкка Озон 500мл — 500.00 грн</div>
+      <div class="mod">Горілкка Озон 50мл — 50.00 грн</div>
+    </div>
+    <div class="product-group">
+      <div class="product">Горілкка Рига</div>
+      <div class="mod">Горілкка Рига 500мл — 550.00 грн</div>
+      <div class="mod">Горілкка Рига 50мл — 55.00 грн</div>
+    </div>
+  </details>
+  <details class="category"><summary>Горілка вірменська</summary>
+    <div class="product-group">
+      <div class="product">Elit Vodka — 70.00 грн</div>
+    </div>
+  </details>
+  <details class="category"><summary>Віскі</summary>
+    <div class="product-group">
+      <div class="product">Red Label 50мл — 130.00 грн</div>
+    </div>
+    <div class="product-group">
+      <div class="product">Jack Daniels 50мл — 140.00 грн</div>
+    </div>
+    <div class="product-group">
+      <div class="product">Віскі "Jameson" 50мл — 130.00 грн</div>
+    </div>
+    <div class="product-group">
+      <div class="product">Jim Beam 50мл — 125.00 грн</div>
+    </div>
+  </details>
+  <details class="category"><summary>Ром</summary>
+    <div class="product-group">
+      <div class="product">Captain Morgan — 120.00 грн</div>
+    </div>
+    <div class="product-group">
+      <div class="product">Isla Antigua — 110.00 грн</div>
+    </div>
+    <div class="product-group">
+      <div class="product">Мартіні — 80.00 грн</div>
+    </div>
+    <div class="product-group">
+      <div class="product">Ром "Gana CARIBA" 50мл — 95.00 грн</div>
+    </div>
+  </details>
+  <details class="category"><summary>Шампанське</summary>
+    <div class="product-group">
+      <div class="product">Prosecco — 700.00 грн</div>
+    </div>
+    <div class="product-group">
+      <div class="product">AOS Frizzante — 700.00 грн</div>
+    </div>
+  </details>
+  <details class="category"><summary>Текіла</summary>
+    <div class="product-group">
+      <div class="product">Текіла голд — 110.00 грн</div>
+    </div>
+    <div class="product-group">
+      <div class="product">Текіла сільвер — 110.00 грн</div>
+    </div>
+  </details>
+  <details class="category"><summary>Пиво</summary>
+    <div class="product-group">
+      <div class="product">Туборг скло 0.5л — 90.00 грн</div>
+    </div>
+    <div class="product-group">
+      <div class="product">Heineken скло 0.33л — 100.00 грн</div>
+    </div>
+    <div class="product-group">
+      <div class="product">Corona скло 0.33л — 100.00 грн</div>
+    </div>
+    <div class="product-group">
+      <div class="product">Staropramen ж/б 0.5л — 90.00 грн</div>
+    </div>
+    <div class="product-group">
+      <div class="product">Holsten темне ж/б 0.5л — 90.00 грн</div>
+    </div>
+    <div class="product-group">
+      <div class="product">Heineken розливне</div>
+      <div class="mod">Heineken розливне 0.33л — 40.00 грн</div>
+      <div class="mod">Heineken розливне 0.5л — 60.00 грн</div>
+    </div>
+    <div class="product-group">
+      <div class="product">Krusovice розливне</div>
+      <div class="mod">Krusovice розливне 0.33л — 40.00 грн</div>
+      <div class="mod">Krusovice розливне 0.5л — 60.00 грн</div>
+    </div>
+  </details>
+  <details class="category"><summary>Вина Вірменії</summary>
+    <div class="product-group">
+      <div class="product">Voskevaz</div>
+      <div class="mod">Voskevaz 50мл — 100.00 грн</div>
+      <div class="mod">Voskevaz 750мл — 1000.00 грн</div>
+    </div>
+    <div class="product-group">
+      <div class="product">Sharan</div>
+      <div class="mod">Sharan 50мл — 100.00 грн</div>
+      <div class="mod">Sharan 750мл — 1000.00 грн</div>
+    </div>
+  </details>
+  <details class="category"><summary>Вина Грузинські</summary>
+    <div class="product-group">
+      <div class="product">Ахашені</div>
+      <div class="mod">Ахашені 50мл — 100.00 грн</div>
+      <div class="mod">Ахашені 750мл — 1000.00 грн</div>
+    </div>
+    <div class="product-group">
+      <div class="product">Кіндзмараулі</div>
+      <div class="mod">Кіндзмараулі 50мл — 100.00 грн</div>
+      <div class="mod">Кіндзмараулі 750мл — 1000.00 грн</div>
+      <div class="mod">Вино "Кіндзмараулі ЕЛІТ" 50мл — 70.00 грн</div>
+      <div class="mod">Вино "Кіндзмараулі ЕЛІТ" 750мл — 1000.00 грн</div>
+    </div>
+    <div class="product-group">
+      <div class="product">Сапераві</div>
+      <div class="mod">Сапераві 50мл — 100.00 грн</div>
+      <div class="mod">Сапераві 750мл — 1000.00 грн</div>
+    </div>
+    <div class="product-group">
+      <div class="product">Вино "Кіндзмараулі ЕЛІТ"</div>
+    </div>
+  </details>
+  <details class="category"><summary>Вірменський коньяк( бренді)</summary>
+    <div class="product-group">
+      <div class="product">Merdza Van (5 років)</div>
+      <div class="mod">Merdza Van (5 років) 500мл — 1100.00 грн</div>
+      <div class="mod">Merdza Van (5 років) 50мл — 130.00 грн</div>
+    </div>
+    <div class="product-group">
+      <div class="product">Arine (3роки)</div>
+      <div class="mod">Arine (3роки) 500мл — 900.00 грн</div>
+      <div class="mod">Arine (3роки) 50мл — 110.00 грн</div>
+    </div>
+    <div class="product-group">
+      <div class="product">Arine (5 років)</div>
+      <div class="mod">Arine (5 років) 500мл — 1100.00 грн</div>
+      <div class="mod">Arine (5 років) 50мл — 110.00 грн</div>
+    </div>
+    <div class="product-group">
+      <div class="product">Arine (6 років)</div>
+      <div class="mod">Arine (6 років) 500мл — 1300.00 грн</div>
+      <div class="mod">Arine (6 років) 50мл — 130.00 грн</div>
+    </div>
+    <div class="product-group">
+      <div class="product">Legend of Armenia 500мл — 1500.00 грн</div>
+    </div>
+    <div class="product-group">
+      <div class="product">Proshyan (8 років)</div>
+      <div class="mod">Proshyan (8 років) 500мл — 2000.00 грн</div>
+      <div class="mod">Proshyan (8 років) 50мл — 200.00 грн</div>
+    </div>
+    <div class="product-group">
+      <div class="product">Коньяк "Лебідь XENT" 500мл — 4000.00 грн</div>
+    </div>
+    <div class="product-group">
+      <div class="product">Коньяк "ARAME 20 years" 700мл — 6000.00 грн</div>
+    </div>
+  </details>
+  <details class="category"><summary>Коктейлі алкогольні</summary>
+    <div class="product-group">
+      <div class="product">Піна Колада — 150.00 грн</div>
+    </div>
+    <div class="product-group">
+      <div class="product">Мохіто 500мл — 150.00 грн</div>
+    </div>
+  </details>
+  <details class="category"><summary>Солодкі напої</summary>
+    <div class="product-group">
+      <div class="product">Кола скло 0,33л — 70.00 грн</div>
+    </div>
+    <div class="product-group">
+      <div class="product">Фанта скло 0.33л — 70.00 грн</div>
+    </div>
+    <div class="product-group">
+      <div class="product">Спрайт скло 0.33л — 70.00 грн</div>
+    </div>
+    <div class="product-group">
+      <div class="product">Кола з/б 0.33л — 60.00 грн</div>
+    </div>
+    <div class="product-group">
+      <div class="product">Фанта з/б 0.33л — 60.00 грн</div>
+    </div>
+    <div class="product-group">
+      <div class="product">Спрайт з/б 0.33л — 60.00 грн</div>
+    </div>
+  </details>
+  <details class="category"><summary>Кава</summary>
+    <div class="product-group">
+      <div class="product">Вірменська кава в турці — 60.00 грн</div>
+    </div>
+    <div class="product-group">
+      <div class="product">Еспресо — 50.00 грн</div>
+    </div>
+    <div class="product-group">
+      <div class="product">Американо — 50.00 грн</div>
+    </div>
+    <div class="product-group">
+      <div class="product">Американо з молоком — 50.00 грн</div>
+    </div>
+    <div class="product-group">
+      <div class="product">Лате — 70.00 грн</div>
+    </div>
+    <div class="product-group">
+      <div class="product">Капучино — 60.00 грн</div>
+    </div>
+    <div class="product-group">
+      <div class="product">Флет уайт — 80.00 грн</div>
+    </div>
+  </details>
+  <details class="category"><summary>Чай</summary>
+    <div class="product-group">
+      <div class="product">Чай чорний — 75.00 грн</div>
+    </div>
+    <div class="product-group">
+      <div class="product">Чай зелений — 75.00 грн</div>
+    </div>
+    <div class="product-group">
+      <div class="product">Чай з м'ятою та чебрецем — 80.00 грн</div>
+    </div>
+    <div class="product-group">
+      <div class="product">Чай трав'яний (альпійський луг) — 75.00 грн</div>
+    </div>
+    <div class="product-group">
+      <div class="product">Чай фруктовий — 75.00 грн</div>
+    </div>
+  </details>
+  <details class="category"><summary>Вина закордонні</summary>
+    <div class="product-group">
+      <div class="product">Вино "FUZION" Argentina 50мл — 65.00 грн</div>
+    </div>
+    <div class="product-group">
+      <div class="product">Вино "SALINA" Іспанія 50мл — 65.00 грн</div>
+    </div>
+    <div class="product-group">
+      <div class="product">Вино "GLORIA" Португалія</div>
+    </div>
+    <div class="product-group">
+      <div class="product">Вино "GLORIA MADEIRA" Португалія 50мл</div>
+      <div class="mod">Вино "GLORIA MADEIRA" Португалія 50мл — 65.00 грн</div>
+    </div>
+    <div class="product-group">
+      <div class="product">Вино "GLORIA MUNDI" Португалія 50мл</div>
+      <div class="mod">Вино "GLORIA MUNDI" Португалія 50мл — 65.00 грн</div>
+    </div>
+  </details>
+  <details class="category"><summary>Морозиво</summary>
+    <div class="product-group">
+      <div class="product">Морозиво з топінгом 25г — 25.00 грн</div>
+    </div>
+  </details>
+</details>
+
+</div>
+
+<script>
+function populateSections() {
+  const sections = new Set();
+  document.querySelectorAll('#menu > details > summary').forEach(s => {
+    sections.add(s.textContent.trim());
+  });
+  const select = document.getElementById('filterSection');
+  [...sections].sort().forEach(sec => {
+    const opt = document.createElement('option');
+    opt.value = sec;
+    opt.textContent = sec;
+    select.appendChild(opt);
+  });
+}
+
+function filterMenu() {
+  const query = document.getElementById('search').value.toLowerCase();
+  const selectedSection = document.getElementById('filterSection').value;
+  const sortOption = document.getElementById('sortOption').value;
+
+  document.querySelectorAll('#menu > details').forEach(section => {
+    const sectionName = section.querySelector('summary').textContent.trim();
+
+    if (selectedSection && sectionName !== selectedSection) {
+      section.style.display = 'none';
+      return;
+    } else {
+      section.style.display = '';
+    }
+
+    let sectionHasVisible = false;
+    section.querySelectorAll('details.category').forEach(category => {
+      let catHasVisible = false;
+
+      // Зібрати всі product-group у масив
+      const groups = Array.from(category.querySelectorAll('.product-group'));
+
+      // Сортування
+      if (sortOption) {
+        groups.sort((a, b) => {
+          const getPrice = el => {
+            const prText = el.querySelector('.product').textContent;
+            const m = prText.match(/— (\d+(?:\.\d+)?) грн/);
+            return m ? parseFloat(m[1]) : 0;
+          };
+          const getName = el => el.querySelector('.product').textContent.split('—')[0].trim();
+
+          if (sortOption === 'priceAsc') return getPrice(a) - getPrice(b);
+          if (sortOption === 'priceDesc') return getPrice(b) - getPrice(a);
+          if (sortOption === 'nameAsc') return getName(a).localeCompare(getName(b));
+          if (sortOption === 'nameDesc') return getName(b).localeCompare(getName(a));
+          return 0;
+        });
+
+        groups.forEach(g => category.appendChild(g));
+      }
+
+      // Фільтрація по тексту
+      groups.forEach(g => {
+        const txt = g.textContent.toLowerCase();
+        const visible = txt.includes(query);
+        g.style.display = visible ? '' : 'none';
+        if (visible) catHasVisible = true;
+      });
+
+      category.style.display = catHasVisible ? '' : 'none';
+      if(catHasVisible) sectionHasVisible = true;
+    });
+
+    section.style.display = sectionHasVisible ? '' : 'none';
+  });
+}
+
+document.addEventListener('DOMContentLoaded', () => {
+  populateSections();
+});
+</script>
+
+</body>
+</html>
